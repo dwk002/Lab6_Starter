@@ -2,11 +2,18 @@
 
 // Here is where the recipes that you will fetch.
 // Feel free to add your own here for part 2, if they are local files simply add their path as a string.
+
 const recipes = [
   'https://introweb.tech/assets/json/ghostCookies.json',
   'https://introweb.tech/assets/json/birthdayCake.json',
-  'https://introweb.tech/assets/json/chocolateChip.json'
+  'https://introweb.tech/assets/json/chocolateChip.json',
+  'assets/recipes/mummy.json',
+  'assets/recipes/pie.json',
+  'assets/recipes/pumpkin.json',
+
 ];
+let RecipeCardCap = 3;
+let RecipeCardStart = 0;
 
 // Once all of the recipes that were specified above have been fetched, their
 // data will be added to this object below. You may use whatever you like for the
@@ -91,7 +98,8 @@ function createRecipeCards() {
   // three recipes we give you, you'll use the bindShowMore() function to
   // show any others you've added when the user clicks on the "Show more" button.
   let mainelement = document.querySelector('main');
-  for(let i =0; i < recipes.length ; ++i){
+  //REcipeCardNum = recipes.length when 'Show more' else only 3
+  for(let i =0; i < RecipeCardCap; ++i){
     let RecCardCustom = document.createElement('recipe-card');
     RecCardCustom.data = recipeData[recipes[i]];
     console.log('main: createRecipeCards: ' + i + ': ' + RecCardCustom.data);
@@ -107,6 +115,21 @@ function bindShowMore() {
   // that were fetched. You should fetch every recipe in the beginning, whether you
   // display it or not, so you don't need to fetch them again. Simply access them
   // in the recipeData object where you stored them/
-
+  let Showbutton = document.querySelector('button');
+  let mainelement = document.querySelector('main');
+  Showbutton.onclick = function (){
+    console.log(Showbutton.textContent);
+    if(Showbutton.textContent == 'Show more'){
+      RecipeCardCap = recipes.length;
+      mainelement.innerHTML = '';
+      createRecipeCards();
+      Showbutton.textContent = 'Show less';
+    } else if (Showbutton.textContent == 'Show less'){
+      RecipeCardCap = 3;
+      mainelement.innerHTML = '';
+      createRecipeCards();
+      Showbutton.textContent = 'Show more';
+    }
+  }
   // Part 2 Explore - TODO
 }
