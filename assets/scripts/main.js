@@ -38,7 +38,45 @@ async function fetchRecipes() {
     // for the keys. Once everything in the array has been successfully fetched, call the resolve(true)
     // callback function to resolve this promise. If there's any error fetching any of the items, call
     // the reject(false) function.
+    
+    for(let i =0; i < recipes.length ; ++i){
+      fetch(recipes[i])
+      .then(response => response.json())
+      .then(data => {
+        recipeData[recipes[i]] = data;
+        console.log('fetch recipes ' + i + ': ' + data)
+        if(i == recipes.length-1){
+          if(Object.keys(recipeData).length == recipes.length){
+            resolve(true);
+          };
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+        reject(false)
+      });
+      //console.log('fetchRecipes: recipeData[recipes['+ i + ']] : ' + recipeData[recipes[i]]);
 
+    };
+    
+    //const response = await fetch('/api/names');
+    //const names = await response.json();
+    /*
+    for(let i =0; i < recipes.length ; ++i){
+      let response = fetch(recipes[i]).catch(reject(false));
+      recipeData[recipes[i]] = response.json();
+      //Debug
+      console.log('fetchRecipes: ' + recipeData[recipes[i]])
+
+    };
+
+    //Check recipes and recipeData lengths
+    if(Object.keys(recipeData).length == recipes.length){
+      resolve(true);
+    } else {
+      reject(false);
+    };*/
+    
     // For part 2 - note that you can fetch local files as well, so store any JSON files you'd like to fetch
     // in the recipes folder and fetch them from there. You'll need to add their paths to the recipes array.
 
@@ -52,7 +90,13 @@ function createRecipeCards() {
   // files with the recipeData Object above. Make sure you only display the 
   // three recipes we give you, you'll use the bindShowMore() function to
   // show any others you've added when the user clicks on the "Show more" button.
-
+  let mainelement = document.querySelector('main');
+  for(let i =0; i < recipes.length ; ++i){
+    let RecCardCustom = document.createElement('recipe-card');
+    RecCardCustom.data = recipeData[recipes[i]];
+    console.log('main: createRecipeCards: ' + i + ': ' + RecCardCustom.data);
+    mainelement.appendChild(RecCardCustom)
+  };
   // Part 1 Expose - TODO
 }
 

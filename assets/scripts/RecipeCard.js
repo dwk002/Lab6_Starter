@@ -1,8 +1,11 @@
 class RecipeCard extends HTMLElement {
+  
+
   constructor() {
     // Part 1 Expose - TODO
-
+    super();
     // You'll want to attach the shadow DOM here
+    let shadow = this.attachShadow({mode: 'open'});
   }
 
   set data(data) {
@@ -96,9 +99,92 @@ class RecipeCard extends HTMLElement {
     //    element.appendChild()
     //    & All of the helper functions below
 
+    //1. [8] img recipe
+    let mealimg = document.createElement('img');
+    mealimg.setAttribute('src', searchForKey(data, "thumbnailUrl"));
+    console.log("1. [8] set img src as " + searchForKey(data, "thumbnailUrl"));
+    mealimg.setAttribute('alt', 'Recipe Title');
+    card.appendChild(mealimg);
+    
+    //2. [9] p element
+    let titleP = document.createElement('p');
+    titleP.setAttribute('class', 'title');
+    card.appendChild(titleP);
+
+    //3. [10] a within p element
+    let titleA = document.createElement('a');
+    titleA.setAttribute('href', getUrl(data));
+    console.log('3. [10] a within p: href = ' + getUrl(data));
+    titleA.textContent  = searchForKey(data, "headline");
+    console.log('3. [10] a within p: titleText = ' + searchForKey(data, "headline"));
+    titleP.appendChild(titleA);
+
+    //4. [12] p element 'organization'
+    let orgP = document.createElement('p');
+    orgP.setAttribute('class', 'organization');
+    orgP.textContent = getOrganization(data);
+    console.log('4. [12] p element organization: ' + getOrganization(data));
+    card.appendChild(orgP);
+
+    //5. [13] div element-rating
+    let ratdiv = document.createElement('div');
+    ratdiv.setAttribute('class', 'rating');
+    card.appendChild(ratdiv);
+
+    //6. [15] span (if or else, Rating)
+    let ratspan1 = document.createElement('span');
+    let ratingValue = searchForKey(data, "ratingValue");
+
+    //7. [17] img (rating)
+    let ratimg = document.createElement('img');
+    
+    //8. [19] span (rating people num)
+    let ratspan2 = document.createElement('span');
+
+    if(typeof ratingValue !== 'undefined'){
+      //6. [15] span (if True, Rating)
+      ratspan1.textContent = ratingValue;
+      console.log('6. [15] span (if or else, Rating): ' + ratingValue);
+      //7. [17] img (rating)
+      let ratingValueRound = Math.trunc(ratingValue);
+      ratimg.setAttribute('src', 'assets/images/icons/' + ratingValueRound + '-star.svg');
+      ratimg.setAttribute('alt', ratingValueRound + ' stars');
+      console.log('7. [17] img (rating): src: ' + 'assets/images/icons/' + ratingValueRound + '-star.svg');
+      ratdiv.appendChild(ratimg);
+      //8. [19] span (rating people num)
+      ratspan2.textContent = searchForKey(data, "ratingCount");
+      console.log('8. [19] span (rating people num): ' + searchForKey(data, "ratingCount"));
+      ratdiv.appendChild(ratspan2);
+    } else {
+      //6. [15] span (if False, Rating)
+      console.log('6. [15] span rating not found');
+      ratspan1.textContent = "No Reviews";
+    }
+
+    ratdiv.appendChild(ratspan1);
+    console.log('Check if we need to change line 162 to be inside if cases');
+
+
+
+    //9. [21] time
+    let recTime = document.createElement('time');
+    recTime.textContent = convertTime(searchForKey(data,"totalTime"));
+    console.log('9. [21] time: ' + convertTime(searchForKey(data,"totalTime")));
+    card.appendChild(recTime);
+
+    //10. [22] p ingredients
+    let ingP = document.createElement('p');
+    ingP.setAttribute('class', 'ingredients');
+    ingP.textContent = createIngredientList(searchForKey(data, "recipeIngredient"));
+    console.log('10. [22] p ingredients list: ' + createIngredientList(searchForKey(data, "recipeIngredient")));
+    card.appendChild(ingP);
     // Make sure to attach your root element and styles to the shadow DOM you
     // created in the constructor()
-
+    
+    console.log('type of <article> card: ' + typeof card);
+    console.log('number of children for <article> card: ' + card.childElementCount);
+    this.shadowRoot.appendChild(card);
+    this.shadowRoot.appendChild(styleElem);
     // Part 1 Expose - TODO
   }
 }
